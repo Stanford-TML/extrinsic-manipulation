@@ -4,68 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/main.css">
-    <title>DexCap | Scalable and Portable Mocap Data Collection System for Dexterous Manipulation</title>
+    <title>One-Shot Transfer of Long-Horizon Extrinsic Manipulation Through Contact Retargeting</title>
 
 </head>
 <body>
 
 <div id="title_slide">
     <div class="title_left">
-        <h1>DexCap: Scalable and Portable Mocap Data<br>Collection System for Dexterous Manipulation</h1>
+        <h1>One-Shot Transfer of Long-Horizon Extrinsic Manipulation Through Contact Retargeting</h1>
         <div class="author-container">
-            <div class="author-name"><a href="https://www.chenwangjeremy.net/" target="_blank">Chen Wang</a></div>
-            <div class="author-name"><a href="https://hshi74.github.io/" target="_blank">Haochen Shi</a></div>
-            <div class="author-name"><a href="https://tml.stanford.edu/people/weizhuo-ken-wang" target="_blank">Weizhuo Wang</a></div>
-            <div class="author-name"><a href="https://ai.stanford.edu/~zharu" target="_blank">Ruohan Zhang</a></div>
-            <div class="author-name"><a href="https://profiles.stanford.edu/fei-fei-li" target="_blank">Li Fei-Fei</a></div>
-            <div class="author-name"><a href="https://profiles.stanford.edu/c-karen-liu" target="_blank">C. Karen Liu</a></div>
+            <div class="author-name"><a href="" target="_blank">Albert Wu<sup>1</sup></a></div>
+            <div class="author-name"><a href="https://ericcsr.github.io" target="">Sirui Chen<sup>1</sup></a></div>
+            <div class="author-name"><a href="https://cs.stanford.edu/~rcwang/" target="_blank">Ruocheng Wang<sup>1</sup></a></div>
+            <div class="author-name"><a href="https://clemense.github.io" target="_blamk">Clemens Eppner<sup>2</sup></a></div>
+            <div class="author-name"><a href="https://profiles.stanford.edu/c-karen-liu" target="_blank">C. Karen Liu<sup>1</sup></a></div>
         </div>
-        <div class="affiliation">
+        <div class="affiliation-container">
+                    <div class="affiliation"><sup>1</sup>Stanford University, <sup>2</sup>NVIDIA</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div class="affiliation">
             <p><img src="assets/logos/SUSig-red.png" style="height: 50px"></p>
-        </div>
+        </div> -->
         <div class="button-container">
-            <a href="assets/DexCap_paper.pdf" target="_blank" class="button"><i class="fa-light fa-file"></i>&emsp14;PDF</a>
-            <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
-<!--            <a href="" target="_blank" class="button"><i class="fa-light fa-film"></i>&emsp14;Video</a>-->
-            <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;tl;dr</a>
-            <a href="https://github.com/j96w/DexCap" target="_blank" class="button"><i class="fa-light fa-code"></i>&emsp14;Code</a>
-            <a href="https://drive.google.com/drive/folders/1VG8Dz_f5tfjf8w7tBG1Y2AAZ2gNv-RjT?usp=sharing" target="_blank" class="button"><i class="fa-light fa-face-smiling-hands"></i>&emsp14;Data</a>
-            <a href="https://docs.google.com/document/d/1ANxSA_PctkqFf3xqAkyktgBgDWEbrFK7b1OnJe54ltw/edit?usp=sharing" target="_blank" class="button"><i class="fa-light fa-robot-astromech"></i>&emsp14;Hardware</a>
+            <a href="assets/extrinsic_manip_paper.pdf" target="_blank" class="button"><i class="fa-light fa-file"></i>&emsp14;PDF</a>
+            <!-- <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
+            <a href="" target="_blank" class="button"><i class="fa-light fa-film"></i>&emsp14;Video</a>
+            <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;tl;dr</a> -->
+            <!-- <a href="" target="_blank" class="button"><i class="fa-light fa-code"></i>&emsp14;Code</a> -->
+            <!-- <a href="https://drive.google.com/drive/folders/1VG8Dz_f5tfjf8w7tBG1Y2AAZ2gNv-RjT?usp=sharing" target="_blank" class="button"><i class="fa-light fa-face-smiling-hands"></i>&emsp14;Data</a>
+            <a href="https://docs.google.com/document/d/1ANxSA_PctkqFf3xqAkyktgBgDWEbrFK7b1OnJe54ltw/edit?usp=sharing" target="_blank" class="button"><i class="fa-light fa-robot-astromech"></i>&emsp14;Hardware</a> -->
         </div>
 
         <br>
         <div class="slideshow-container">
             <div class="video_container">
-                <video loop autoplay muted playsinline preload="metadata" width="100%">
-                    <source src="assets/web_video_first.mov" type="video/mp4">
+                <video autoplay muted playsinline loop controls preload="metadata" width="100%">
+                    <source src="assets/video/video_1min.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
         <br>
 
-
         <div id="abstract">
             <h1>Abstract</h1>
             <p>
-                Imitation learning from human hand motion data presents a promising avenue for imbuing robots with human-like dexterity in real-world manipulation tasks.
-                Despite this potential, substantial challenges persist, particularly with the portability of existing hand motion capture (mocap) systems
-                and the difficulty of translating mocap data into effective control policies. To tackle these issues, we introduce DexCap, a portable
-                hand motion capture system, alongside DexIL, a novel imitation algorithm for training dexterous robot skills directly from human hand
-                mocap data. DexCap offers precise, occlusion-resistant tracking of wrist and finger motions based on SLAM and electromagnetic field together
-                with 3D observations of the environment. Utilizing this rich dataset, DexIL employs inverse kinematics and point cloud-based imitation learning
-                to replicate human actions with robot hands. Beyond learning from human motion, DexCap also offers an optional human-in-the-loop correction mechanism
-                to refine and further improve robot performance. Through extensive evaluation across six dexterous manipulation tasks, our approach not only demonstrates
-                superior performance but also showcases the system's capability to effectively learn from in-the-wild mocap data, paving the way for future data collection
-                methods for dexterous manipulation.
+                Extrinsic manipulation, the use of environment contacts to achieve manipulation objectives, enables strategies that are otherwise impossible with a parallel jaw gripper. 
+                However, orchestrating a long-horizon sequence of contact interactions between the robot, object, and environment is notoriously challenging due to the scene diversity, 
+                large action space, and difficult contact dynamics. We observe that most extrinsic manipulation are combinations of short-horizon primitives, 
+                each of which depend strongly on initializing from a desirable contact configuration to succeed. 
+                Therefore, we propose to generalize one extrinsic manipulation trajectory to diverse objects and environments by retargeting contact requirements. 
+                We prepare a single library of robust short-horizon, goal-conditioned primitive policies, and design a framework to compose state constraints stemming from contacts specifications of each primitive. 
+                Given a test scene and a single demo prescribing the primitive sequence, our method enforces the state constraints on the test scene and find intermediate goal states using inverse kinematics. 
+                The goals are then tracked by the primitive policies. Using a 7+1 DoF robotic arm-gripper system, we achieved an overall success rate of 80.5% on hardware 
+                over 4 long-horizon extrinsic manipulation tasks, each with up to 4 primitives. Our experiments cover 10 objects and 6 environment configurations. 
+                We further show empirically that our method admits a wide range of demonstrations, and that contact retargeting is indeed the key to successfully combining primitives for long-horizon extrinsic manipulation.
             </p>
         </div>
     </div>
 </div>
 <hr class="rounded">
-<div id="overview">
-
+<!-- <div id="video">
     <h1>DexCap: A Portable Hand Motion Capture System</h1>
+    <br>
+    <br>
+</div> -->
 
+<div id="overview">
+    <!-- <h1>Method</h1>
+    
+
+    <br>
+    <hr class="rounded">
+
+    <h2>Vision pipeline setup</h2>
+    <p>To obtain the pose estimation from scratch, the text description is first provided to 
+        OWL-ViT~\cite{minderer2022simple} to obtain a bounding box of the object. 
+        The bounding box is given to Segment Anything~\cite{kirillov2023segment} to produce a segmentation mask for the object. 
+        Megapose~\cite{labbe2022megapose} uses the segmented object to produce an initial pose estimation. 
+        The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of approximately $8-12$Hz using only the "refiner" of Megapose. 
+        Our pipeline automatically detects when the object is lost using the refiner pose score. 
+        If the score is too low, the entire segmentation-pose estimation pipeline is rerun.
+
+    </p>
+
+    <div class="allegrofail">
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/system.mp4" type="video/mp4">
+            </video>
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/system.mp4" type="video/mp4">
+            </video>
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/system.mp4" type="video/mp4">
+            </video>
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/system.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    <br>
+    <hr class="rounded">
+
+    <h1>Task execution videos</h1>
     <div class="allegrofail">
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata">
@@ -114,10 +158,10 @@
     <p>
         <b>Compare to vision-based method:</b> In this example, human is holding the mug handle with a fixed gesture. The vision-based hand tracking method used by the VR headset fails to accurately track
                     finger positions due to heavy occlusion. DexCap is more capable of collecting hand-object interaction data.
-    </p>
+    </p> -->
 
 
-    <h1>From Human to Robot</h1>
+    <!-- <h1>From Human to Robot</h1>
     <div class="allegrofail">
         <div class="video_container">
             <video autoplay muted playsinline loop preload="metadata">
@@ -158,9 +202,9 @@
     <br>
     <br>
     <br>
-    <hr class="rounded">
+    <hr class="rounded"> -->
 
-    <h1>Method: Data Retargeting and Imitation Learning</h1>
+    <!-- <h1>Method: Data Retargeting and Imitation Learning</h1>
     <div class="allegrofail">
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata">
@@ -322,16 +366,14 @@
                 <source src="assets/normal_scissor_more.mp4" type="video/mp4">
             </video>
         </div>
-    </div>
+    </div> -->
 
+    <!-- <br>
     <hr class="rounded">
+
     <h1>Acknowledgments</h1>
     <p>
-        This research was supported by National Science Foundation NSF-FRR-2153854 and Stanford Institute
-        for Human-Centered Artificial Intelligence, SUHAI. This work is partially supported by ONR MURI N00014-21-1-2801.
-        We would like to thank Yunfan Jiang, Albert Wu, Paul de La Sayette, Ruocheng Wang, Sirui Chen, Josiah Wong, Wenlong Huang,
-        Yanjie Ze, Christopher Agia, Jingyun Yang and the SVL PAIR group for providing help and feedback. We also thank Zhenjia Xu, Cheng Chi,
-        Yifeng Zhu for their suggestions in tuning the robot controller. We especially thank Kenneth Shaw, Ananye Agrawal, Deepak Pathak for open-sourcing the LEAP Hand.
+        TODO
     </p>
 
     <br>
@@ -339,15 +381,16 @@
     <hr class="rounded">
     <h1>BibTeX</h1>
     <p class="bibtex">
-        @article{wang2024dexcap, <br>
+        TODO
+        <!-- @article{wang2024dexcap, <br>
             title = {DexCap: Scalable and Portable Mocap Data Collection System for Dexterous Manipulation}, <br>
             author = {Wang, Chen and Shi, Haochen and Wang, Weizhuo and Zhang, Ruohan and Fei-Fei, Li and Liu, C. Karen}, <br>
             journal = {arXiv preprint arXiv:2403.07788}, <br>
             year = {2024} <br>
-        }
+        } -->
     </p>
     <br>
-    <br>
+    <br> -->
 </div>
 </body>
 
