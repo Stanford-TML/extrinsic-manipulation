@@ -72,13 +72,8 @@
     <br>
 </div> -->
 
-<!-- <div id="overview"> -->
-    <!-- <h1>Method</h1>
-    
-
-    <br>
-    <hr class="rounded">
-
+<div id="overview">
+    <h1>Method</h1>
     <h2>Vision pipeline setup</h2>
     <p>To obtain the pose estimation from scratch, the text description is first provided to 
         OWL-ViT~\cite{minderer2022simple} to obtain a bounding box of the object. 
@@ -90,7 +85,7 @@
 
     </p>
 
-    <div class="allegrofail">
+    <!-- <div class="allegrofail">
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata">
                 <source src="assets/system.mp4" type="video/mp4">
@@ -105,60 +100,84 @@
                 <source src="assets/system.mp4" type="video/mp4">
             </video>
         </div>
-    </div>
+    </div> -->
     <br>
     <hr class="rounded">
 
     <h1>Task execution videos</h1>
-    <div class="allegrofail">
+    <p>
+        All videos are played at real time speeed.
+    </p>
+
+    <h2>Obstacle avoidance</h2>    
+    <div class="taskvideos">
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system.mp4" type="video/mp4">
+                <source src="assets/videos/720p/demo_avoidance.mp4" type="video/mp4">
             </video>
+            <div class="caption">
+                <p>Demonstration</p>
+            </div>
         </div>
-    </div>
-    <p>
-        Overview of the DexCap system:
-        <br><b>Front design:</b> A camera rack on the chest is equipped with an RGB-D LiDAR camera and three SLAM tracking cameras.
-        <br><b>Back design:</b> A mini-PC and power bank in the backpack power the system for approximately 40 minutes of data collection.
-        <br><b>Data collection process:</b> The tracking cameras, initially placed in the camera rack for calibration,
-        are relocated to hand mounts during data collection to consistently track the palm positions.
-        Finger motions are captured by motion capture gloves.
-    </p>
-
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop preload="metadata">
-                <source src="assets/data_vis.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        <b>Data visualization:</b> 3D hand motion capture data in point cloud observation.
-    </p>
-
-    <div class="allegrofail">
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/speed_comp.mp4" type="video/mp4">
+                <source src="assets/videos/720p/push_push_cereal.mp4" type="video/mp4">
             </video>
+            <div class="caption">
+                <p>Cereal</p>
+            </div>
+        </div>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_cocoa.mp4" type="video/mp4">
+            </video>
+            <div class="caption">
+                <p>Cocoa</p>
+            </div>
+        </div>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_cracker.mp4" type="video/mp4">
+            </video>
+            <div class="caption">
+                <p>Cracker</p>
+            </div>
         </div>
     </div>
-    <p>
-        <b>Data collection throughput:</b> DexCap is about three times faster than teleoperation in data collection throughput and is close to the level of natural human motion.
-    </p>
-
-    <div class="allegrofail" style="text-align: center;">
-        <div class="video_container" style="display: inline-block;">
-            <video autoplay muted playsinline loop preload="metadata" width="70%">
-                <source src="assets/comp_vr_c.mp4" type="video/mp4">
+    <div class="taskvideos">
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_flapjack.mp4" type="video/mp4">
             </video>
+            <div class="caption">
+                <p>Flapjack</p>
+            </div>
+        </div>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_oat.mp4" type="video/mp4">
+            </video>
+            <div class="caption">
+                <p>Oat</p>
+            </div>
+        </div>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_seasoning.mp4" type="video/mp4">
+            </video>
+            <div class="caption">
+                <p>Seasoning</p>
+            </div>
+        </div>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata">
+                <source src="assets/videos/720p/push_push_wafer.mp4" type="video/mp4">
+            </video>
+            <div class="caption">
+                <p>Wafer</p>
+            </div>
         </div>
     </div>
-    <p>
-        <b>Compare to vision-based method:</b> In this example, human is holding the mug handle with a fixed gesture. The vision-based hand tracking method used by the VR headset fails to accurately track
-                    finger positions due to heavy occlusion. DexCap is more capable of collecting hand-object interaction data.
-    </p> -->
 
 
     <!-- <h1>From Human to Robot</h1>
@@ -391,7 +410,7 @@
     <!-- </p>
     <br>
     <br> -->
-<!-- </div> -->
+</div>
 </body>
 
 <script src="assets/js/full_screen_video.js"></script>

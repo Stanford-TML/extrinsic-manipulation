@@ -418,7 +418,7 @@ hr.rounded {
     color: #2E2D29;
     font-family: "Source Serif 4", serif;
     font-weight: normal;
-    font-size: 1.8vw;
+    font-size: 1.5vw;
     padding-top: 2vw;
     width: 70%;
     margin-left: auto;
@@ -831,16 +831,17 @@ hr.rounded {
     font-weight: 500 !important;
 }
 
-.allegrofail {
+.taskvideos {
     margin-top: 0.95vw;
     margin-bottom: 0.95vw;
     margin-left: auto;
     margin-right: auto;
     display: flex;
     justify-content: center;
+    width: 70%;
 }
 
-.allegrofail > .video_container {
+.taskvideos > .video_container {
     margin-top: 0.95vw;
     max-width: 50%;
     max-height: 40%;
@@ -849,25 +850,26 @@ hr.rounded {
     border-radius: 0.5vw;
 }
 
-.allegrofail > .video_container > video {
+.taskvideos > .video_container > video {
     max-width: 100%;
     max-height: 100%;
     border-radius: 0.5vw;
 }
 
-.allegrofail > .video_container > .caption {
+.taskvideos > .video_container > .caption {
     margin-top: -1vw;
     max-width: 100%;
     max-height: 100%;
     position: relative;
 }
 
-.allegrofail > .video_container > .caption > p {
+.taskvideos > .video_container > .caption > p {
     width: 100% !important;
     color: #53565A !important;
     font-family: "Source Serif 4", serif;
     font-size: 0.9vw !important;
     font-weight: 500 !important;
+    text-align: center;
 }
 
 .teleop {
@@ -1589,23 +1591,6 @@ html.w-mod-touch * {
         max-height: 22%;
     }
 
-    .allegrolower {
-        max-height: 90%;
-    }
-
-    .allegrolower > .video_container {
-        max-width: 64%;
-        max-height: 32%;
-    }
-
-    .allegrolower > .video_container > .caption {
-        margin-top: -3vw;
-    }
-
-    .allegrolower > .video_container > .caption > p {
-        font-size: 1.4vw !important;
-    }
-
     .barplot {
         max-height: 90%;
     }
@@ -1675,16 +1660,16 @@ html.w-mod-touch * {
         font-size: 1.4vw !important;
     }
 
-    .allegrofail > .video_container {
+    .taskvideos > .video_container {
         max-width: 90%;
         max-height: 90%;
     }
 
-    .allegrofail > .video_container > .caption {
+    .taskvideos > .video_container > .caption {
         margin-top: -3vw;
     }
 
-    .allegrofail > .video_container > .caption > p {
+    .taskvideos > .video_container > .caption > p {
         font-size: 1.4vw !important;
     }
 
