@@ -8,619 +8,680 @@
 
 </head>
 <body>
-
-<div id="title_slide">
-    <div class="title_left">
-        <h1>One-Shot Transfer of Long-Horizon Extrinsic Manipulation Through Contact Retargeting</h1>
-        <div class="author-container">
-            <div class="author-name"><a href="" target="_blank">Albert Wu<sup>1</sup></a></div>
-            <div class="author-name"><a href="https://ericcsr.github.io" target="">Sirui Chen<sup>1</sup></a></div>
-            <div class="author-name"><a href="https://cs.stanford.edu/~rcwang/" target="_blank">Ruocheng Wang<sup>1</sup></a></div>
-            <div class="author-name"><a href="https://clemense.github.io" target="_blamk">Clemens Eppner<sup>2</sup></a></div>
-            <div class="author-name"><a href="https://profiles.stanford.edu/c-karen-liu" target="_blank">C. Karen Liu<sup>1</sup></a></div>
+    <div id="title_slide">
+        <div class="title_left">
+            <h1>One-Shot Transfer of Long-Horizon Extrinsic Manipulation Through Contact Retargeting</h1>
+            <div class="author-container">
+                <div class="author-name"><a href="" target="_blank">Albert Wu<sup>1*</sup></a></div>
+                <div class="author-name"><a href="https://ericcsr.github.io" target="">Sirui Chen<sup>1</sup></a></div>
+                <div class="author-name"><a href="https://cs.stanford.edu/~rcwang/" target="_blank">Ruocheng Wang<sup>1</sup></a></div>
+                <div class="author-name"><a href="https://clemense.github.io" target="_blamk">Clemens Eppner<sup>2</sup></a></div>
+                <div class="author-name"><a href="https://profiles.stanford.edu/c-karen-liu" target="_blank">C. Karen Liu<sup>1</sup></a></div>
+            </div>
+            <div class="affiliation-container">
+                <div class="affiliation"><sup>1</sup>Stanford University, <sup>2</sup>NVIDIA</div>
+            </div>
         </div>
-        <div class="affiliation-container">
-                    <div class="affiliation"><sup>1</sup>Stanford University, <sup>2</sup>NVIDIA</div>
+    </div>
+            
+            <!-- <div class="affiliation">
+                <p><img src="assets/logos/SUSig-red.png" style="height: 50px"></p>
+            </div> -->
+    <div class="button-container">
+        <a href="assets/extrinsic_manip_paper.pdf" target="_blank" class="button"><i class="fa-light fa-file"></i>&emsp14;PDF</a>
+        <!-- <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
+        <a href="" target="_blank" class="button"><i class="fa-light fa-film"></i>&emsp14;Video</a>
+        <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;tl;dr</a> -->
+        <!-- <a href="" target="_blank" class="button"><i class="fa-light fa-code"></i>&emsp14;Code</a> -->
+        <!-- <a href="https://drive.google.com/drive/folders/1VG8Dz_f5tfjf8w7tBG1Y2AAZ2gNv-RjT?usp=sharing" target="_blank" class="button"><i class="fa-light fa-face-smiling-hands"></i>&emsp14;Data</a>
+        <a href="https://docs.google.com/document/d/1ANxSA_PctkqFf3xqAkyktgBgDWEbrFK7b1OnJe54ltw/edit?usp=sharing" target="_blank" class="button"><i class="fa-light fa-robot-astromech"></i>&emsp14;Hardware</a> -->
+    </div>
+
+    <br>
+    <div class="slideshow-container">
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata" width="100%">
+                <source src="assets/videos/video_1min.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    <br>
+
+    <div id="abstract">
+        <h1>Abstract</h1>
+        <p>
+            Extrinsic manipulation, the use of environment contacts to achieve manipulation objectives, enables strategies that are otherwise impossible with a parallel jaw gripper. 
+            However, orchestrating a long-horizon sequence of contact interactions between the robot, object, and environment is notoriously challenging due to the scene diversity, 
+            large action space, and difficult contact dynamics. We observe that most extrinsic manipulation are combinations of short-horizon primitives, 
+            each of which depend strongly on initializing from a desirable contact configuration to succeed. 
+            Therefore, we propose to generalize one extrinsic manipulation trajectory to diverse objects and environments by retargeting contact requirements. 
+            We prepare a single library of robust short-horizon, goal-conditioned primitive policies, and design a framework to compose state constraints stemming from contacts specifications of each primitive. 
+            Given a test scene and a single demo prescribing the primitive sequence, our method enforces the state constraints on the test scene and find intermediate goal states using inverse kinematics. 
+            The goals are then tracked by the primitive policies. Using a 7+1 DoF robotic arm-gripper system, we achieved an overall success rate of 80.5% on hardware 
+            over 4 long-horizon extrinsic manipulation tasks, each with up to 4 primitives. Our experiments cover 10 objects and 6 environment configurations. 
+            We further show empirically that our method admits a wide range of demonstrations, and that contact retargeting is indeed the key to successfully combining primitives for long-horizon extrinsic manipulation.
+        </p>
+    </div>
+
+    <hr class="rounded">
+    <!-- <div id="video">
+        <h1>DexCap: A Portable Hand Motion Capture System</h1>
+        <br>
+        <br>
+    </div> -->
+
+    <div id="overview"> <!-- This is a legacy misnomer and is just the body of the website-->
+        <h1>Method</h1>
+        <h2>Pipeline overview</h2>
+        <p>  </p>
+        </p>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata" width="100%">
+                <source src="assets/videos/pipeline_overview.mp4" type="video/mp4" alt="pipeline overview">
+            </video>
+        </div>
+
+
+        <h2>Object details</h2>
+        <p> The mass and approximate dimensions of the objects used in the experiments are shown in the table below. </p>
+        </p>
+
+        <img src="assets/images/object_properties.png" alt="object properties">
+
+        <!-- <div class="video_container">
+            <img src="assets/images/object_properties.png" alt="object properties">
+        </div> -->
+
+        <h2>Vision pipeline setup</h2>
+        <p>To obtain the pose estimation from scratch, the text description is first provided to 
+            OWL-ViT~\cite{minderer2022simple} to obtain a bounding box of the object. 
+            The bounding box is given to Segment Anything~\cite{kirillov2023segment} to produce a segmentation mask for the object. 
+            Megapose~\cite{labbe2022megapose} uses the segmented object to produce an initial pose estimation. 
+            The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of approximately $8-12$Hz using only the "refiner" of Megapose. 
+            Our pipeline automatically detects when the object is lost using the refiner pose score. 
+            If the score is too low, the entire segmentation-pose estimation pipeline is rerun.
+        </p>
+
+        <!-- <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/system.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/system.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/system.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/system.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div> -->
+        <br>
+        <hr class="rounded">
+
+        <h1>Result summary</h1>
+        <p>
+            Our method 
+        </p>
+
+        <img src="assets/images/object_properties.png" alt="object properties">
+
+
+        <br>
+        <hr class="rounded">
+
+
+        <h1>Task execution videos</h1>
+        <p>
+            All videos are at real time speeed.
+        </p>
+
+        <h2>Obstacle avoidance</h2>    
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/demo_avoidance.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Demonstration</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video  muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_cereal.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cereal</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video  muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_cocoa.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cocoa</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_cracker.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cracker</p>
                 </div>
             </div>
         </div>
-        
-        <!-- <div class="affiliation">
-            <p><img src="assets/logos/SUSig-red.png" style="height: 50px"></p>
-        </div> -->
-        <div class="button-container">
-            <a href="assets/extrinsic_manip_paper.pdf" target="_blank" class="button"><i class="fa-light fa-file"></i>&emsp14;PDF</a>
-            <!-- <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
-            <a href="" target="_blank" class="button"><i class="fa-light fa-film"></i>&emsp14;Video</a>
-            <a href="https://arxiv.org/abs/2403.07788" target="_blank" class="button"><i class="fa-brands fa-x-twitter"></i>&emsp14;tl;dr</a> -->
-            <!-- <a href="" target="_blank" class="button"><i class="fa-light fa-code"></i>&emsp14;Code</a> -->
-            <!-- <a href="https://drive.google.com/drive/folders/1VG8Dz_f5tfjf8w7tBG1Y2AAZ2gNv-RjT?usp=sharing" target="_blank" class="button"><i class="fa-light fa-face-smiling-hands"></i>&emsp14;Data</a>
-            <a href="https://docs.google.com/document/d/1ANxSA_PctkqFf3xqAkyktgBgDWEbrFK7b1OnJe54ltw/edit?usp=sharing" target="_blank" class="button"><i class="fa-light fa-robot-astromech"></i>&emsp14;Hardware</a> -->
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_flapjack.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Flapjack</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_oat.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Oat</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_seasoning.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Seasoning</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_push_wafer.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Wafer</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Object storage</h2>    
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/demo_storage.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Demonstration</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_cereal.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cereal</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_cocoa.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cocoa</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_cracker.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cracker</p>
+                </div>
+            </div>
+        </div>
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_flapjack.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Flapjack</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_oat.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Oat</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_seasoning.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Seasoning</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_wafer.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Wafer</p>
+                </div>
+            </div>
+        </div>
+
+
+        <h2>Occluded grasping</h2>    
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/demo_grasping.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Demonstration</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_cereal.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cereal</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_cocoa.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cocoa</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_cracker.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cracker</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_flapjack.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Flapjack</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_oat.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Oat</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_seasoning.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Seasoning</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_grasp_wafer.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Wafer</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Object retrieval</h2>    
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/demo_retrieval.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Demonstration</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_cereal.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cereal</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_cocoa.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cocoa</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_cracker.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Cracker</p>
+                </div>
+            </div>
+        </div>
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_flapjack.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Flapjack</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_oat.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Oat</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_seasoning.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Seasoning</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/pull_push_pivot_grasp_wafer.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Wafer</p>
+                </div>
+            </div>
         </div>
 
         <br>
-        <div class="slideshow-container">
+        <hr class="rounded">
+
+        <h1>Conclusion</h1>
+        <p>
+            Our method 
+        </p>
+        <h1>BibTeX</h1>
+        <p class="bibtex">
+            Coming soon
+            <!-- @article{wang2024dexcap, <br>
+            &nbsp;&nbsp;title = {DexCap: Scalable and Portable Mocap Data Collection System for Dexterous Manipulation}, <br>
+            &nbsp;&nbsp;author = {Wang, Chen and Shi, Haochen and Wang, Weizhuo and Zhang, Ruohan and Fei-Fei, Li and Liu, C. Karen}, <br>
+            &nbsp;&nbsp;journal = {arXiv preprint arXiv:2403.07788}, <br>
+            &nbsp;&nbsp;year = {2024} <br>
+            } -->
+        </p>
+        <!-- <h1>From Human to Robot</h1>
+        <div class="allegrofail">
             <div class="video_container">
-                <video autoplay muted playsinline loop controls preload="metadata" width="100%">
-                    <source src="assets/videos/video_1min.mp4" type="video/mp4">
+                <video autoplay muted playsinline loop preload="none">
+                    <source src="assets/human_to_robot.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
+        <p>
+            <b>Observation retargeting:</b> To simplify the process of switching the camera system between the human and robot,
+            a quick-release buckle has been integrated into the back of the camera rack, allowing for swift camera swaps
+            – in less than 20 seconds. In this way, the robot utilizes the same observation camera employed during human data collection.
+        </p>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop preload="none">
+                    <source src="assets/fingertip_ik.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <p>
+            <b>Action retargeting:</b> To transfer human finger motion to the LEAP robot hand, we use fingertip
+            inverse kinematics (IK) to compute the 16-dimensional joint positions. Human finger motions are tracked
+            using a pair of motion capture gloves, which measure the 3D positions of the fingers relative to the palm based on electromagnetic field (EMF).
+        </p>
+
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop preload="none">
+                    <source src="assets/dataset.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <p>
+            <b>Visual gap:</b> To further bridge the visual gap between human hand and robot hand,
+            we use forward kinematics to genrate a point cloud mesh of the robot hand and add it to the pointcloud observation as is shown in this video.
+        </p>
+
         <br>
+        <br>
+        <br>
+        <hr class="rounded"> -->
 
-        <div id="abstract">
-            <h1>Abstract</h1>
+        <!-- <h1>Method: Data Retargeting and Imitation Learning</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/method2.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <p>
+            We first retarget the DexCap data to the robot embodiment by constructing 3D point clouds from RGB-D observations and transforming it into robot operation space.
+            Meanwhile, the hand motion capture data is retargeted to the dexterous hand and robot arm with fingertip IK.
+            Based on the data, a Diffusion Policy is learned to take the point cloud as input and outputs a sequence of future goal positions as the robot actions.
+        </p>
+
+        <h1>Results</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_ball.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Fully autonomous policy rollouts. Policy learned with 30-minute human mocap data without any teleoperation.</p>
+                </div>
+            </div>
+        </div>
+
+        <h1>Bimanual Manipulation Task</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_bimaual.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>0:00-0:09 Collecting bimanual human mocap data <br>0:10-1:47 Fully autonomous policy rollouts (learned with 30-minute human mocap data without any teleoperation)</p>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <hr class="rounded">
+
+        <h1>In-the-wild Data Collection with DexCap</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/system_in_wild.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <div class="allegrolower">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/transfer_c.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p><b>Transfer to robot space</b></p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/dataset_c.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p><b>Remove redundant points and add point clouds of the robot hand</b></p>
+                </div>
+            </div>
+        </div>
+
+        <h1>Policy learned with In-the-wild DexCap Data</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_packaging_trainedobj.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p><b>Trained objects:</b> Fully autonomous policy rollouts in 1x speed.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="allegrolower">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_packaging_unseenobj.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p><b>Unseen objects:</b>. Fully autonomous policy rollouts in 1x speed.</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_packaging_unseenobj2.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+
+        <br>
+        <hr class="rounded">
+
+        <h1>Human-in-the-loop correction with DexCap</h1>
+        <br>
+        <div class="allegrolower">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/HIL_mode1.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/HIL_mode2.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <p>
+            DexCap supports two types of human-in-the-loop correction during the policy rollouts: <br>
+            <b>(1). Residual correction</b> measures the 3D delta position changes of the human wrist and incorporates them as residual actions to the robot's wrist movements.
+            This mode enables minimal movement but requiring more precise control.<br>
+            <b>(2). Teleoperation</b> directly translates full human hand motions to the robot end-effector actions based on inverse kinematics.
+            This mode enables the full control over the robot but requiring more effort.<br>
+            Users can switch between the two modes by stepping on the foot pedal during the rollouts.
+        </p>
+
+        <div class="video_container">
+            <img src="assets/HIL_method.png" alt="Description of Image">
+        </div>
+        <p>
+            The corrections are stored in a new dataset and uniformly sampled with the original dataset for fine-tuning the robot policy
+        </p>
+
+        <h1>Results after finetuning - Tea preparing</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_tea.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Fully autonomous policy rollouts in 2x speed. Policy learned with 1-hour human mocap data and 30 human-in-the-loop corrections.</p>
+                </div>
+                <br>
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_tea_more.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+
+        <h1>Results after finetuning - Scissor cutting</h1>
+        <div class="allegrofail">
+            <div class="video_container">
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_scissor.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Fully autonomous policy rollouts in 2x speed. Policy learned with 1-hour human mocap data and 30 human-in-the-loop corrections.</p>
+                </div>
+                <br>
+                <video autoplay muted playsinline loop controls preload="none">
+                    <source src="assets/normal_scissor_more.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div> -->
+
+        <!-- <br>
+        <hr class="rounded">
+
+        <h1>Acknowledgments</h1>
+        <p>
+            TODO
+        </p>
+
+        <br>
+        <br>
+        <hr class="rounded">
+        <h1>BibTeX</h1>
+        <p class="bibtex">
+            TODO
+            <!-- @article{wang2024dexcap, <br>
+                title = {DexCap: Scalable and Portable Mocap Data Collection System for Dexterous Manipulation}, <br>
+                author = {Wang, Chen and Shi, Haochen and Wang, Weizhuo and Zhang, Ruohan and Fei-Fei, Li and Liu, C. Karen}, <br>
+                journal = {arXiv preprint arXiv:2403.07788}, <br>
+                year = {2024} <br>
+            } -->
+        <!-- </p>
+        <br>
+        <br> -->
+    </div>
+    <footer class="footer">
+        <div class="w-container">
             <p>
-                Extrinsic manipulation, the use of environment contacts to achieve manipulation objectives, enables strategies that are otherwise impossible with a parallel jaw gripper. 
-                However, orchestrating a long-horizon sequence of contact interactions between the robot, object, and environment is notoriously challenging due to the scene diversity, 
-                large action space, and difficult contact dynamics. We observe that most extrinsic manipulation are combinations of short-horizon primitives, 
-                each of which depend strongly on initializing from a desirable contact configuration to succeed. 
-                Therefore, we propose to generalize one extrinsic manipulation trajectory to diverse objects and environments by retargeting contact requirements. 
-                We prepare a single library of robust short-horizon, goal-conditioned primitive policies, and design a framework to compose state constraints stemming from contacts specifications of each primitive. 
-                Given a test scene and a single demo prescribing the primitive sequence, our method enforces the state constraints on the test scene and find intermediate goal states using inverse kinematics. 
-                The goals are then tracked by the primitive policies. Using a 7+1 DoF robotic arm-gripper system, we achieved an overall success rate of 80.5% on hardware 
-                over 4 long-horizon extrinsic manipulation tasks, each with up to 4 primitives. Our experiments cover 10 objects and 6 environment configurations. 
-                We further show empirically that our method admits a wide range of demonstrations, and that contact retargeting is indeed the key to successfully combining primitives for long-horizon extrinsic manipulation.
+                Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a>, <a href="https://peract.github.io/">PerAct</a>, and <a href="https://dex-cap.github.io/">DexCap</a>.
             </p>
-        </div>
-    </div>
-</div>
-<hr class="rounded">
-<!-- <div id="video">
-    <h1>DexCap: A Portable Hand Motion Capture System</h1>
-    <br>
-    <br>
-</div> -->
-
-<div id="overview">
-    <h1>Method</h1>
-    <h2>Vision pipeline setup</h2>
-    <p>To obtain the pose estimation from scratch, the text description is first provided to 
-        OWL-ViT~\cite{minderer2022simple} to obtain a bounding box of the object. 
-        The bounding box is given to Segment Anything~\cite{kirillov2023segment} to produce a segmentation mask for the object. 
-        Megapose~\cite{labbe2022megapose} uses the segmented object to produce an initial pose estimation. 
-        The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of approximately $8-12$Hz using only the "refiner" of Megapose. 
-        Our pipeline automatically detects when the object is lost using the refiner pose score. 
-        If the score is too low, the entire segmentation-pose estimation pipeline is rerun.
-
-    </p>
-
-    <!-- <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system.mp4" type="video/mp4">
-            </video>
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system.mp4" type="video/mp4">
-            </video>
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system.mp4" type="video/mp4">
-            </video>
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div> -->
-    <br>
-    <hr class="rounded">
-
-    <h1>Task execution videos</h1>
-    <p>
-        All videos are played at real time speeed.
-    </p>
-
-    <h2>Obstacle avoidance</h2>    
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/demo_avoidance.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Demonstration</p>
+    
+        <!-- <div class="columns is-centered">
+            <div class="column">
+            <div class="content has-text-centered">
             </div>
-        </div>
-        <div class="video_container">
-            <video  muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_cereal.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cereal</p>
             </div>
+        </div> -->
         </div>
-        <div class="video_container">
-            <video  muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_cocoa.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cocoa</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_cracker.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cracker</p>
-            </div>
-        </div>
-    </div>
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_flapjack.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Flapjack</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_oat.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Oat</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_seasoning.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Seasoning</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_push_wafer.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Wafer</p>
-            </div>
-        </div>
-    </div>
-
-    <h2>Object storage</h2>    
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/demo_storage.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Demonstration</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_cereal.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cereal</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_cocoa.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cocoa</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_cracker.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cracker</p>
-            </div>
-        </div>
-    </div>
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_flapjack.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Flapjack</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_oat.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Oat</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_seasoning.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Seasoning</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_pull_wafer.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Wafer</p>
-            </div>
-        </div>
-    </div>
-
-
-    <h2>Occluded grasping</h2>    
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/demo_grasping.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Demonstration</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_cereal.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cereal</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_cocoa.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cocoa</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_cracker.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cracker</p>
-            </div>
-        </div>
-    </div>
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_flapjack.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Flapjack</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_oat.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Oat</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_seasoning.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Seasoning</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/push_pivot_grasp_wafer.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Wafer</p>
-            </div>
-        </div>
-    </div>
-
-    <h2>Object retrieval</h2>    
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/demo_retrieval.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Demonstration</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_cereal.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cereal</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_cocoa.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cocoa</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_cracker.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Cracker</p>
-            </div>
-        </div>
-    </div>
-    <div class="taskvideos">
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_flapjack.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Flapjack</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_oat.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Oat</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_seasoning.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Seasoning</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video muted playsinline loop controls preload="metadata">
-                <source src="assets/videos/720p/pull_push_pivot_grasp_wafer.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Wafer</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- <h1>From Human to Robot</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop preload="metadata">
-                <source src="assets/human_to_robot.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        <b>Observation retargeting:</b> To simplify the process of switching the camera system between the human and robot,
-        a quick-release buckle has been integrated into the back of the camera rack, allowing for swift camera swaps
-        – in less than 20 seconds. In this way, the robot utilizes the same observation camera employed during human data collection.
-    </p>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop preload="metadata">
-                <source src="assets/fingertip_ik.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        <b>Action retargeting:</b> To transfer human finger motion to the LEAP robot hand, we use fingertip
-        inverse kinematics (IK) to compute the 16-dimensional joint positions. Human finger motions are tracked
-        using a pair of motion capture gloves, which measure the 3D positions of the fingers relative to the palm based on electromagnetic field (EMF).
-    </p>
-
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop preload="metadata">
-                <source src="assets/dataset.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        <b>Visual gap:</b> To further bridge the visual gap between human hand and robot hand,
-        we use forward kinematics to genrate a point cloud mesh of the robot hand and add it to the pointcloud observation as is shown in this video.
-    </p>
-
-    <br>
-    <br>
-    <br>
-    <hr class="rounded"> -->
-
-    <!-- <h1>Method: Data Retargeting and Imitation Learning</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/method2.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        We first retarget the DexCap data to the robot embodiment by constructing 3D point clouds from RGB-D observations and transforming it into robot operation space.
-        Meanwhile, the hand motion capture data is retargeted to the dexterous hand and robot arm with fingertip IK.
-        Based on the data, a Diffusion Policy is learned to take the point cloud as input and outputs a sequence of future goal positions as the robot actions.
-    </p>
-
-    <h1>Results</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_ball.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Fully autonomous policy rollouts. Policy learned with 30-minute human mocap data without any teleoperation.</p>
-            </div>
-        </div>
-    </div>
-
-    <h1>Bimanual Manipulation Task</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_bimaual.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>0:00-0:09 Collecting bimanual human mocap data <br>0:10-1:47 Fully autonomous policy rollouts (learned with 30-minute human mocap data without any teleoperation)</p>
-            </div>
-        </div>
-    </div>
-
-    <br>
-    <hr class="rounded">
-
-    <h1>In-the-wild Data Collection with DexCap</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/system_in_wild.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-
-    <div class="allegrolower">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/transfer_c.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p><b>Transfer to robot space</b></p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/dataset_c.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p><b>Remove redundant points and add point clouds of the robot hand</b></p>
-            </div>
-        </div>
-    </div>
-
-    <h1>Policy learned with In-the-wild DexCap Data</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_packaging_trainedobj.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p><b>Trained objects:</b> Fully autonomous policy rollouts in 1x speed.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="allegrolower">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_packaging_unseenobj.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p><b>Unseen objects:</b>. Fully autonomous policy rollouts in 1x speed.</p>
-            </div>
-        </div>
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_packaging_unseenobj2.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-
-
-    <br>
-    <hr class="rounded">
-
-    <h1>Human-in-the-loop correction with DexCap</h1>
-    <br>
-    <div class="allegrolower">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/HIL_mode1.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/HIL_mode2.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-    <p>
-        DexCap supports two types of human-in-the-loop correction during the policy rollouts: <br>
-        <b>(1). Residual correction</b> measures the 3D delta position changes of the human wrist and incorporates them as residual actions to the robot's wrist movements.
-        This mode enables minimal movement but requiring more precise control.<br>
-        <b>(2). Teleoperation</b> directly translates full human hand motions to the robot end-effector actions based on inverse kinematics.
-        This mode enables the full control over the robot but requiring more effort.<br>
-        Users can switch between the two modes by stepping on the foot pedal during the rollouts.
-    </p>
-
-    <div class="video_container">
-        <img src="assets/HIL_method.png" alt="Description of Image">
-    </div>
-    <p>
-        The corrections are stored in a new dataset and uniformly sampled with the original dataset for fine-tuning the robot policy
-    </p>
-
-    <h1>Results after finetuning - Tea preparing</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_tea.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Fully autonomous policy rollouts in 2x speed. Policy learned with 1-hour human mocap data and 30 human-in-the-loop corrections.</p>
-            </div>
-            <br>
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_tea_more.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div>
-
-
-    <h1>Results after finetuning - Scissor cutting</h1>
-    <div class="allegrofail">
-        <div class="video_container">
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_scissor.mp4" type="video/mp4">
-            </video>
-            <div class="caption">
-                <p>Fully autonomous policy rollouts in 2x speed. Policy learned with 1-hour human mocap data and 30 human-in-the-loop corrections.</p>
-            </div>
-            <br>
-            <video autoplay muted playsinline loop controls preload="metadata">
-                <source src="assets/normal_scissor_more.mp4" type="video/mp4">
-            </video>
-        </div>
-    </div> -->
-
-    <!-- <br>
-    <hr class="rounded">
-
-    <h1>Acknowledgments</h1>
-    <p>
-        TODO
-    </p>
-
-    <br>
-    <br>
-    <hr class="rounded">
-    <h1>BibTeX</h1>
-    <p class="bibtex">
-        TODO
-        <!-- @article{wang2024dexcap, <br>
-            title = {DexCap: Scalable and Portable Mocap Data Collection System for Dexterous Manipulation}, <br>
-            author = {Wang, Chen and Shi, Haochen and Wang, Weizhuo and Zhang, Ruohan and Fei-Fei, Li and Liu, C. Karen}, <br>
-            journal = {arXiv preprint arXiv:2403.07788}, <br>
-            year = {2024} <br>
-        } -->
-    <!-- </p>
-    <br>
-    <br> -->
-</div>
+    </footer>
 </body>
 
 <script src="assets/js/full_screen_video.js"></script>
