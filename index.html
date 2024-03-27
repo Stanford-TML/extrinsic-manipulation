@@ -71,36 +71,97 @@
     </div> -->
 
     <div id="overview"> <!-- This is a legacy misnomer and is just the body of the website-->
-        <h1>Method</h1>
-        <h2>Pipeline overview</h2>
-        <p>  </p>
+        <h1>Pipeline summary</h1>
+        <p> 
+            We prepare a primitive library and define each primitive’s contact requirements online. 
+            Given a demo task trajectory and a test scene, we retarget the demo to the test scene by enforcing contact requirements. 
+            The demo’s primitive sequence is then used to perform the task in the test scene.
+            Please refer to our paper for more details.
+        </p>
         </p>
         <div class="video_container">
             <video autoplay muted playsinline loop controls preload="metadata" width="100%">
-                <source src="assets/videos/pipeline_overview.mp4" type="video/mp4" alt="pipeline overview">
+                <source src="assets/videos/method_animation.mp4" type="video/mp4" alt="method oberview">
             </video>
+            <div class="caption">
+                <p>Summary of our pipeline.
+                </p>
+            </div>
+        </div>
+        <br>
+        <hr class="rounded">
+        
+        <h1>Primitive implementation</h1>
+        <div id="primitive_summary">
+            <div class="image_container" > 
+                <img src="assets/images/primitive_summary.png" alt="summary of primitives">
+                <div class="caption">
+                    <p>Summary of the primitives implemented in this project.</p>
+                </div>
+            </div>
         </div>
 
-
-        <h2>Object details</h2>
-        <p> The mass and approximate dimensions of the objects used in the experiments are shown in the table below. </p>
+        <h2>Push primtive</h2>
+        <p>
         </p>
 
-        <img src="assets/images/object_properties.png" alt="object properties">
+        <h2>Pull primtive</h2>
+        <p>
+        </p>
+
+        <h2>Pivot primtive</h2>
+        <p>    
+        </p>
+
+        <h2>Grasp primtive</h2>
+        <p>    
+        </p>
+
+
+
+        <br>
+        <hr class="rounded">
+
+        <h1>System setup</h1>
+        <h2>Object set</h2>
+        <div class="image_container">
+            <img src="assets/images/objects.jpg" alt="object set photo">
+            <div class="caption">
+                <p>Objects used in this project.</p>
+            </div>
+        </div>
+        <div class="image_container">
+            <img src="assets/images/object_properties.png" alt="object properties">
+            <div class="caption">
+                <p>Mass and approximate dimensions of the objects used in the experiments.</p>
+            </div>
+        </div>
 
         <!-- <div class="video_container">
             <img src="assets/images/object_properties.png" alt="object properties">
         </div> -->
 
-        <h2>Vision pipeline setup</h2>
+        <h2>Vision pipeline</h2>
         <p>To obtain the pose estimation from scratch, the text description is first provided to 
-            OWL-ViT~\cite{minderer2022simple} to obtain a bounding box of the object. 
-            The bounding box is given to Segment Anything~\cite{kirillov2023segment} to produce a segmentation mask for the object. 
-            Megapose~\cite{labbe2022megapose} uses the segmented object to produce an initial pose estimation. 
-            The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of approximately $8-12$Hz using only the "refiner" of Megapose. 
+            <a href="https://huggingface.co/docs/transformers/model_doc/owlvit"><cite>OWL-ViT</cite></a>
+             to obtain a bounding box of the object. 
+            The bounding box is given to 
+            <a href="https://segment-anything.com/"><cite>Segment Anything</cite></a>
+            to produce a segmentation mask for the object. 
+            <a href="https://megapose6d.github.io/"><cite>Megapose</cite></a> 
+            uses the segmented object to produce an initial pose estimation. 
+            The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of 8-12Hz using only the "refiner" of Megapose. 
             Our pipeline automatically detects when the object is lost using the refiner pose score. 
             If the score is too low, the entire segmentation-pose estimation pipeline is rerun.
         </p>
+        <div class="video_container">
+            <video autoplay muted playsinline loop controls preload="metadata" width="100%">
+                <source src="assets/videos/pipeline_overview.mp4" type="video/mp4" alt="pipeline overview">
+            </video>
+            <div class="caption">
+                <p>Visual</p>
+            </div>
+        </div>
 
         <!-- <div class="allegrofail">
             <div class="video_container">
@@ -121,24 +182,45 @@
         <br>
         <hr class="rounded">
 
-        <h1>Result summary</h1>
+        <h1>Results</h1>
+        <!-- <h2>Overview</h2> -->
         <p>
-            Our method 
+            We evaluate our framework on 4 real-world extrinsic manipulation tasks: "obstacle avoidance,"
+            "object storage," "occluded grasping," and "object retrieval." 
+            Various environments are used for the demonstrations and tests to showcase our method's robustness against environment changes. 
+            All demonstrations are collected on cracker. 
+            Every task is evaluated on the 7 standard objects, each with 5 trials. 
+            Additionally, occluded grasping is evaluated on the 3 short with an extra "pull" step.
+            Below we show 1 success instance of all the task-object combinations. <b>All videos are at real time (1x) speeed.</b>
+            <br><br>
+            Our method achieved an overall success rate of <b>80.5%</b> (<b>81.7%</b> for standard objects).
+            Despite not being tailored to "occluded grasping," we outperformed the 2022 paper based on deep reinforcement learning
+            <a href="https://sites.google.com/view/grasp-ungraspable"><cite>Learning to Grasp the Ungraspable with Emergent Extrinsic Dexterity</cite></a>, 
+            both when the initial object state is against (<b>88.6%</b> vs. 78%) and away from (<b>77.1%</b> vs. 56%) the wall.
+            <br><br>
+            To show that our method is agnostic to the specific demonstration, we collect demos for grasping on oat and the 3 impossible objects that are unlikely to be graspable by the robot. 
+            We then retarget all demos onto cracker from 5 different initial poses. We achieved 100% success rate across 20 trials.
+
         </p>
+ 
+        <div class="image_container" > 
+            <img src="assets/images/results_main.png" alt="Main results">
+            <div class="caption">
+                <p>Summary of experiments on 7 standard objects.</p>
+            </div>
+        </div>
 
-        <img src="assets/images/object_properties.png" alt="object properties">
-
-
-        <br>
-        <hr class="rounded">
-
-
-        <h1>Task execution videos</h1>
-        <p>
-            All videos are at real time speeed.
-        </p>
+        <div id="additional_grasping">
+            <div class="image_container" > 
+                <img src="assets/images/short_object_results.png" alt="Additional occluded grasping results">
+                <div class="caption">
+                    <p>Summary of "occluded grasping" experiments on short objects and retargetd from impossible objects.</p>
+                </div>
+            </div>    
+        </div>
 
         <h2>Obstacle avoidance</h2>    
+        <p><i>Push</i> the object forward, switch contact and <i>push</i> again to avoid the obstacle.</p>
         <div class="taskvideos">
             <div class="video_container">
                 <video muted playsinline loop controls preload="none">
@@ -208,7 +290,10 @@
             </div>
         </div>
 
-        <h2>Object storage</h2>    
+        <h2>Object storage</h2> 
+        <p>
+            <i>Push</i> an object toward the wall, <i>pivot</i> to align with an opening between the wall and the object, then <i>pull</i> it into the opening for storage.
+        </p>
         <div class="taskvideos">
             <div class="video_container">
                 <video muted playsinline loop controls preload="none">
@@ -280,6 +365,9 @@
 
 
         <h2>Occluded grasping</h2>    
+        <p>
+            <i>Push</i> the object in an ungraspable pose toward the wall, <i>pivot</i> it to expose a graspable edge, and <i>grasp</i> it.
+        </p>
         <div class="taskvideos">
             <div class="video_container">
                 <video muted playsinline loop controls preload="none">
@@ -350,7 +438,50 @@
             </div>
         </div>
 
+        <h2>Occluded grasping (short objects)</h2> 
+        <p>
+            <i>Push</i> the object in an ungraspable pose toward the wall, <i>pivot</i> it to expose a graspable edge, <i>pull</i> to create space between the wall and the object for inserting the gripper,
+            and <i>grasp</i> it.
+        </p>
+        <div class="taskvideos">
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/demo_short_grasp.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Demonstration</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_grasp_camera.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Camera</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_grasp_meat.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Meat</p>
+                </div>
+            </div>
+            <div class="video_container">
+                <video muted playsinline loop controls preload="none">
+                    <source src="assets/videos/720p/push_pivot_pull_grasp_onion.mp4" type="video/mp4">
+                </video>
+                <div class="caption">
+                    <p>Onion</p>
+                </div>
+            </div>
+        </div>
+
         <h2>Object retrieval</h2>    
+        <p>
+            <i>Pull</i> the object from between two obstacles, <i>push</i> toward the wall, <i>pivot</i> it to expose a graspable edge, and <i>grasp</i> it.
+        </p>
         <div class="taskvideos">
             <div class="video_container">
                 <video muted playsinline loop controls preload="none">
@@ -425,7 +556,11 @@
 
         <h1>Conclusion</h1>
         <p>
-            Our method 
+            This work presents a framework for generalizing longhorizon extrinsic manipulation from a single demonstration. 
+            Our method retargets the demonstration trajectory to the test scene by enforcing contact constraints with IK at every contact switches. 
+            The retargeted trajectory is then tracked with a sequence of short-horizon policies for each contact configuration. 
+            Our method achieved an overall success rate of 81.7% on real-world objects over 4 challenging long-horizon extrinsic manipulation tasks. 
+            Additional experiments show that contact retargeting is crucial to successfully retargeting such long-horizon plans, and a wide range of demonstration can be successfully retargeted with our pipeline. 
         </p>
         <h1>BibTeX</h1>
         <p class="bibtex">
