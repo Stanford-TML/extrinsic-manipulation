@@ -12,7 +12,7 @@
         <div class="title_left">
             <h1>One-Shot Transfer of Long-Horizon Extrinsic Manipulation Through Contact Retargeting</h1>
             <div class="author-container">
-                <div class="author-name"><a href="" target="_blank">Albert Wu<sup>1*</sup></a></div>
+                <div class="author-name"><a href="" target="_blank">Albert Wu<sup>1</sup></a></div>
                 <div class="author-name"><a href="https://ericcsr.github.io" target="">Sirui Chen<sup>1</sup></a></div>
                 <div class="author-name"><a href="https://cs.stanford.edu/~rcwang/" target="_blank">Ruocheng Wang<sup>1</sup></a></div>
                 <div class="author-name"><a href="https://clemense.github.io" target="_blamk">Clemens Eppner<sup>2</sup></a></div>
@@ -73,9 +73,15 @@
     <div id="overview"> <!-- This is a legacy misnomer and is just the body of the website-->
         <h1>Pipeline summary</h1>
         <p> 
-            We prepare a primitive library and define each primitive’s contact requirements online. 
-            Given a demo task trajectory and a test scene, we retarget the demo to the test scene by enforcing contact requirements. 
-            The demo’s primitive sequence is then used to perform the task in the test scene.
+            We prepare a primitive library and define each primitive’s contact requirements offline. 
+            Given a single demonstration, we identify the relative transforms between the initial and final object states of the primitives.
+            The transforms are first directly applied to the test scene initial object state via the <i>remap_x</i> subroutine.
+            The output are states unlikely to satisfy the contact requirements of the primitives in the test scene.
+            We then perform <i>retarget_x</i>, which modifies the outputs to satisfy the environment-object contact requirements required by the primitives.
+            The outputs of <i>retarget_x</i> are the intermediate goals for each primitive.
+            Next, we run <i>retarget_q</i>, which finds the robot configuration that satisfies the contact requirements of the subsequent primitive.
+            We thereby obtain a sequence of intermediate goals and robot configurations in the test scene.
+            Finally, we execute the primitive policies using the intermediate goals and robot configurations to achieve the task in the test scene.
             Please refer to our paper for more details.
         </p>
         </p>
@@ -91,7 +97,14 @@
         <br>
         <hr class="rounded">
         
-        <h1>Primitive implementation</h1>
+        <h1>Primitive and contact retargeting implementation</h1>
+        <p>
+            4 primitives, "push," "pull," "pivot," and "grasp," are implemented in this project.
+            Each primitive is a short-horizon, goal-conditioned policy that takes in the current state and a goal state and outputs a sequence of actions.
+            The initial and goal states are states that satisfy the contact requirements of the primitive.
+            Here we summarize the primitives and their contact requirements.
+            Please refer to our paper and code for implementation details.
+        </p>
         <div id="primitive_summary">
             <div class="image_container" > 
                 <img src="assets/images/primitive_summary.png" alt="summary of primitives">
@@ -103,21 +116,66 @@
 
         <h2>Push primtive</h2>
         <p>
+            The push primitive is a single reinforcement learning based policy trained in <a href="https://github.com/NVIDIA-Omniverse/IsaacGymEnvs"><cite>Isaac Gym</cite></a>.
+            The policy is trained to push any of the 7 standard objects and 3 short objects from any initial pose to any goal pose in the workspace.
+            We explicitly inform the policy of the object tested using one-hot encoding.
+            <br><br>
+            The robot-object contact is implicitly enforced by the policy, thus there is no need to initialize the robot in a specific contact configuration.
+            This showcases the flexibility of our pipeline in handling diverse contact requirements of each primitives.
+            Such design choice also allows emergent behaviors where the policy switches robot-object contact to correct for tracking errors.
+            <br><br>
+            Other than requiring the object to be on the ground, there are no environment-object contact requirements.
         </p>
 
         <h2>Pull primtive</h2>
         <p>
+            The pull primitive is a two-stage, hand-designed open loop policy that leverages operational space control (OSC). 
+            Starting from an initial robot configuration where the robot is in the vicnity of the top of the object,
+            the robot first closes its gripper and moves downward toward the object to ensure contact is established.
+            The robot then moves the gripper horizontally to pull the object toward the goal position.
+            <br><br>
+            The robot-object contact required by the pull primitive is to have the gripper approximately in contact with the top of the object.
+            To do so, we compute the top rectangle of the object's bounding box and move the robot to the center of the rectangle.
+            <br><br>
+            Other than requiring the object to be on the ground, there are no environment-object contact requirements.
         </p>
 
         <h2>Pivot primtive</h2>
         <p>    
+            The pivot primitive is a three-stage, hand-designed feedback policy that uses OSC.
+            A lower edge of the object is in required to be in contact with the wall and orthogonal to the wall normal.
+            The gripper fingertips are in contact with the object on the opposite side of the wall-object contact.
+            The robot first pushes the object toward the wall to establish contact using OSC.
+            Next, the gripper follows a <a href="https://en.wikipedia.org/wiki/Trammel_of_Archimedes">Trammel of Archimedes</a> path
+            whose parameters are given by the bounding box dimensions of the object. A contact force is maintained 
+            in an impedance control manner by commanding a fixed tracking error in the radial direction of the arc.
+            Once the object has been pivoted, the robot breaks contact and clears the object by lifting the gripper upwards.
+            The pose of the object is tracked to ensure the object is pivoted to by the correct angle of approximately π/2.
+            <br><br>
+            The robot-object contact is implemented as an intersection of two constraints in <a href="https://drake.mit.edu"><cite>Drake</cite></a>: 
+            the distances between the object and the fingertips are zero; 
+            the fingertips are within a cone centered at the object’s geometric center, has the wall’s normal as its axis, and has a half-angle of π/6.
+            <br><br>
+            The environment-object contact is implemented using the bounding box of the object. 
+            Of the 4 vertices that are closest to the wall, the 2 lowest ones must be on the wall, 
+            and the distance between the wall and the object is 0.
         </p>
 
         <h2>Grasp primtive</h2>
-        <p>    
+        <p>
+            The grasp primitive is a hand-designed policy that uses OSC.
+            The primitive begins with the gripper fully open above the object. 
+            First, the robot descends to slot the object between the gripper fingers. 
+            Due to potential pose estimation error, a hand-designed wiggling motion is performed to increase the success rate.
+            After the object is between the gripper, the gripper is closed and the object is lifted up.
+            <br><br>
+            To find the robot configuration that satisfies the contact requirements of the grasp primitive,
+            we compute the bounding box of the object's project on the ground plane.
+            The two fingers are aligned with the short side of the box, and centered at the box's center.
+            The initial gripper height is set to the height of the object's bounding box plus a small tolerance.
+            <br><br>
+            Other than requiring the object to be on the ground, there are no environment-object contact requirements.
         </p>
-
-
 
         <br>
         <hr class="rounded">
