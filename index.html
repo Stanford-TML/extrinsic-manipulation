@@ -149,18 +149,18 @@
             Our pipeline takes in an RGB image, a prespecified text description, and a textured mesh of the object.
             It outputs the 6D pose of the object. 
             To obtain the pose estimation from scratch, we perform the following steps:
+            <ol>
+                <li>The prespecified text description of the object is given to
+                    <a href="https://huggingface.co/docs/transformers/model_doc/owlvit"><cite>OWL-ViT</cite></a>
+                     to obtain a bounding box of the object.</li>
+                <li>The bounding box is given to 
+                    <a href="https://segment-anything.com/"><cite>Segment Anything</cite></a>
+                    to produce a segmentation mask of the object.</li>
+                <li><a href="https://megapose6d.github.io/"><cite>Megapose</cite></a> 
+                    uses the segmented object to produce an initial pose estimation</li>
+                <li>Subsequent pose tracking is done using only the "refiner" component of <a href="https://megapose6d.github.io/"><cite>Megapose</cite></a>. The last estimated pose is used as the initial guess.</li>
+            </ol>    
         </p>
-        <ol>
-            <li>The prespecified text description of the object is given to
-                <a href="https://huggingface.co/docs/transformers/model_doc/owlvit"><cite>OWL-ViT</cite></a>
-                 to obtain a bounding box of the object.</li>
-            <li>The bounding box is given to 
-                <a href="https://segment-anything.com/"><cite>Segment Anything</cite></a>
-                to produce a segmentation mask of the object.</li>
-            <li><a href="https://megapose6d.github.io/"><cite>Megapose</cite></a> 
-                uses the segmented object to produce an initial pose estimation</li>
-            <li>Subsequent pose tracking is done using only the "refiner" component of <a href="https://megapose6d.github.io/"><cite>Megapose</cite></a>. The last estimated pose is used as the initial guess.</li>
-        </ol>
         <p>
             Steps 1-3 are only run when a guess of the object pose is unavailable, i.e. at pipeline initialization or when the object is lost.
             On our workstation with Intel i9-13900K CPU and NVIDIA GeForce RTX 4090 GPU, steps 1-3 typically takes a few seconds to complete, 

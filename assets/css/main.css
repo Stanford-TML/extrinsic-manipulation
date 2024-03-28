@@ -454,6 +454,7 @@ hr.rounded {
 }
 
 ol {
+    list-style-type: decimal;
     padding-top: 0.5vw;
     color: #2E2D29;
     font-family: "Source Serif 4", serif;
