@@ -453,6 +453,20 @@ hr.rounded {
     margin-right: auto;
 }
 
+ol {
+    padding-top: 0.5vw;
+    color: #2E2D29;
+    font-family: "Source Serif 4", serif;
+    font-weight: normal;
+    font-size: 0.95vw;
+    line-height: 1.4;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+    word-wrap: break-word;
+    hyphens: auto;
+    -webkit-font-smoothing: antialiased;
+}
 
 #overview > .video_container {
     margin-top: 1vw;
@@ -490,6 +504,7 @@ hr.rounded {
     font-weight: 500 !important;
     text-align: center;
 }
+
 
 .image_container {
     max-width: 70%;

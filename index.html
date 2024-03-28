@@ -127,7 +127,10 @@
         <div class="image_container">
             <img src="assets/images/objects.jpg" alt="object set photo">
             <div class="caption">
-                <p>Objects used in this project.</p>
+                <p>
+                    Objects used in this project. Standard objects are tested on all tasks. 
+                    Short objects and impossible are used for additional "occluded grasping" experiments.
+                </p>
             </div>
         </div>
         <div class="image_container">
@@ -141,25 +144,40 @@
             <img src="assets/images/object_properties.png" alt="object properties">
         </div> -->
 
-        <h2>Vision pipeline</h2>
-        <p>To obtain the pose estimation from scratch, the text description is first provided to 
-            <a href="https://huggingface.co/docs/transformers/model_doc/owlvit"><cite>OWL-ViT</cite></a>
-             to obtain a bounding box of the object. 
-            The bounding box is given to 
-            <a href="https://segment-anything.com/"><cite>Segment Anything</cite></a>
-            to produce a segmentation mask for the object. 
-            <a href="https://megapose6d.github.io/"><cite>Megapose</cite></a> 
-            uses the segmented object to produce an initial pose estimation. 
-            The above typically takes a few seconds to complete. Afterwards, the object is tracked at a frame rate of 8-12Hz using only the "refiner" of Megapose. 
-            Our pipeline automatically detects when the object is lost using the refiner pose score. 
-            If the score is too low, the entire segmentation-pose estimation pipeline is rerun.
+        <h2>Pose estimation pipeline</h2>
+        <p>
+            Our pipeline takes in an RGB image, a prespecified text description, and a textured mesh of the object.
+            It outputs the 6D pose of the object. 
+            To obtain the pose estimation from scratch, we perform the following steps:
         </p>
-        <div class="video_container">
+        <ol>
+            <li>The prespecified text description of the object is given to
+                <a href="https://huggingface.co/docs/transformers/model_doc/owlvit"><cite>OWL-ViT</cite></a>
+                 to obtain a bounding box of the object.</li>
+            <li>The bounding box is given to 
+                <a href="https://segment-anything.com/"><cite>Segment Anything</cite></a>
+                to produce a segmentation mask of the object.</li>
+            <li><a href="https://megapose6d.github.io/"><cite>Megapose</cite></a> 
+                uses the segmented object to produce an initial pose estimation</li>
+            <li>Subsequent pose tracking is done using only the "refiner" component of <a href="https://megapose6d.github.io/"><cite>Megapose</cite></a>. The last estimated pose is used as the initial guess.</li>
+        </ol>
+        <p>
+            Steps 1-3 are only run when a guess of the object pose is unavailable, i.e. at pipeline initialization or when the object is lost.
+            On our workstation with Intel i9-13900K CPU and NVIDIA GeForce RTX 4090 GPU, steps 1-3 typically takes a few seconds to complete, 
+            and step 4 is run at a frame rate of 8-12Hz.
+            The pipeline automatically detects when the object is lost using the Megapose refiner's "pose score". 
+            If the score is too low, the entire pipeline is rerun.
+        </p>
+        <div class="video_container" id="pose_estimation">
             <video autoplay muted playsinline loop controls preload="metadata" width="100%">
-                <source src="assets/videos/pipeline_overview.mp4" type="video/mp4" alt="pipeline overview">
+                <source src="assets/videos/vision_pipeline_video.mp4" type="video/mp4" alt="pipeline overview">
             </video>
             <div class="caption">
-                <p>Visual</p>
+                <p>
+                    Pose estimation pipeline output at 1x speed. 
+                    Step 3 outputs are shown in blue.
+                    Step 4 outputs are shown in green.
+                </p>
             </div>
         </div>
 
@@ -190,8 +208,8 @@
             Various environments are used for the demonstrations and tests to showcase our method's robustness against environment changes. 
             All demonstrations are collected on cracker. 
             Every task is evaluated on the 7 standard objects, each with 5 trials. 
-            Additionally, occluded grasping is evaluated on the 3 short with an extra "pull" step.
-            Below we show 1 success instance of all the task-object combinations. <b>All videos are at real time (1x) speeed.</b>
+            Additionally, occluded grasping is evaluated on the 3 short objects with an extra "pull" step.
+            Below we show 1 success instance of all the task-object combinations. <b>All videos are at 1x speeed.</b>
             <br><br>
             Our method achieved an overall success rate of <b>80.5%</b> (<b>81.7%</b> for standard objects).
             Despite not being tailored to "occluded grasping," we outperformed the 2022 paper based on deep reinforcement learning
@@ -214,7 +232,7 @@
             <div class="image_container" > 
                 <img src="assets/images/short_object_results.png" alt="Additional occluded grasping results">
                 <div class="caption">
-                    <p>Summary of "occluded grasping" experiments on short objects and retargetd from impossible objects.</p>
+                    <p>Summary of additional "occluded grasping" experiments.</p>
                 </div>
             </div>    
         </div>
